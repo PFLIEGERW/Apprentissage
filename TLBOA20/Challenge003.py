@@ -12,7 +12,3 @@ def options (num):
         return "PE"
     else:
         return "Please use a number between 1 and 4"
-
-print("Please choose an activity : 1 - Computer Science, 2 - Music, 3 - Dance, 4 - PE : ")
-choice = input()
-print(options(choice))
