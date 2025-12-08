@@ -1,0 +1,11 @@
+Q1 :
+8 - > 8
+3 - > 8
+12 - > 12
+5 - > 5
+
+Q2 :
+Ligne 4 à 7
+
+Q3 :
+3 est inférieur à 5, l'instruction de la ligne 2 prévaut donc.
