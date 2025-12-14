@@ -10,7 +10,8 @@ def is_odd(number_in):
 def main():
     again = True
     while again:
-        number = input("Enter an integral number or STOP to stop the program : ")
+        number = input("Enter an integral number or STOP to stop the \
+program : ")
         try:
             if number != "STOP" :
                 odd = is_odd(number)
