@@ -14,7 +14,8 @@ def diceroll(FaceNumber):
 def main(FaceNumber):
     
     if FaceNumber == "":
-        print("Merci de bien vouloir entrer le nombre de face des dés à lancer : ")
+        print("Merci de bien vouloir entrer le nombre de face des dés à \
+lancer : ")
         try :
             FaceNumber = int(input())
             
