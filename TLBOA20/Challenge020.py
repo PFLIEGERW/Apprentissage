@@ -11,13 +11,16 @@ lancer :")
 #    try:
     FaceNumber = int(input())
     rolls = {}
-    for x in (0,3):
-        for i in (1,3):
-            rolls["roll{0}".format(i)] = diceroll(FaceNumber)
-        print(rolls["1"], "+", rolls["2"], "=", rolls["1"]+rolls["2"])
+    rollscopy = {}
+    for x in range(0,3):
+        for i in range(0,2):
+            rollscopy["roll{}".format(i)] = diceroll(FaceNumber)
+        rolls=rollscopy
+        print(rolls["roll0"]," + ",rolls["roll1"]," = ",\
+rolls["roll0"]+rolls["roll1"])
 
 #    except:
-    print("Merci de n'utiliser qu'un nombre entier.")
-    return main()
+#    print("Merci de n'utiliser qu'un nombre entier.")
+#    return main()
 if __name__ == '__main__':
     main()
