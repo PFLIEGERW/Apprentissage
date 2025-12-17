@@ -8,19 +8,27 @@ def diceroll(FaceNumber):
 def main():
     print("Merci de bien vouloir indiquer le nombre de faces des dés à \
 lancer :")
-#    try:
-    FaceNumber = int(input())
-    rolls = {}
-    rollscopy = {}
-    for x in range(0,3):
-        for i in range(0,2):
-            rollscopy["roll{}".format(i)] = diceroll(FaceNumber)
-        rolls=rollscopy
-        print(rolls["roll0"]," + ",rolls["roll1"]," = ",\
-rolls["roll0"]+rolls["roll1"])
+    try:
+        FaceNumber = int(input())
+        
+        rollsdicttemp = {}
+        rollsdict = {}
+        rollstemp = {}
+        rolls = {}
+        for x in range(0,3):
+            for i in range(0,2):
+                rollsdicttemp["roll{}".format(i)] = diceroll(FaceNumber)
+            rollstemp["rollsdict{}".format(x)] = rollsdicttemp
+        rolls = rollstemp
 
-#    except:
-#    print("Merci de n'utiliser qu'un nombre entier.")
-#    return main()
+        for y, obj in rolls.items():
+            print(y)
+            
+            for y in obj:
+                print(y + " : ", obj[y])
+
+    except:
+        print("Merci de n'utiliser qu'un nombre entier.")
+        return main()
 if __name__ == '__main__':
     main()
