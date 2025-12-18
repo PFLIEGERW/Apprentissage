@@ -18,14 +18,15 @@ lancer :")
         for x in range(0,3):
             for i in range(0,2):
                 rollsdicttemp["roll{}".format(i)] = diceroll(FaceNumber)
-            rollstemp["rollsdict{}".format(x)] = rollsdicttemp
-        rolls = rollstemp
+                rollsdict = rollsdicttemp    
+                rollstemp["rollsdict{}".format(x)] = rollsdict
+            rolls = rollstemp
 
-        for y, obj in rolls.items():
-            print(y)
+        for key, obj in rolls.items():
+            print(key)
             
-            for y in obj:
-                print(y + " : ", obj[y])
+            for key in obj:
+                print(key + " : ", obj[key])
 
     except:
         print("Merci de n'utiliser qu'un nombre entier.")
