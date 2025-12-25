@@ -7,6 +7,7 @@ def vowel_counter(sentence):
     I = 0
     O = 0
     U = 0
+    Y = 0
 
     for i in range (len(sentence)):
         if sentence[i].upper() == "A":
@@ -19,6 +20,8 @@ def vowel_counter(sentence):
             O += 1
         elif sentence[i].upper() == "U":
             U += 1
+        elif sentence[i].upper() == "Y":
+        Y += 1
 
     print("Voici le décompte des voyelles : ")
     print("A : ",A)
@@ -26,6 +29,7 @@ def vowel_counter(sentence):
     print("I : ",I)
     print("O : ",O)
     print("U : ",U)
+    print("Y : ",Y)
     
 def main():
     sentence = ("Learning programming is similar to learning a musical\
