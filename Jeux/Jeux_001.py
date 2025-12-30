@@ -30,23 +30,26 @@ Cle_Dict_Armes = list(Dict_Armes.keys())
 Blessure = 0
 
 def combat(Attaquant,Defenseur):
-    if Attaquant.Arme[0] <= Defenseur.Armure[1]:
+    if Dict_Armes[Attaquant.Arme][0] <= Dict_Armures[Defenseur.Armure][1]:
         return 0
-    elif Attaquant.Arme[0] > Defenseur.Armure[1]:
-        return Attaquant.Arme[1]
+    elif Dict_Armes[Attaquant.Arme][0] > Dict_Armures[Defenseur.Armure][1]:
+        return Dict_Armes[Attaquant.Arme][0]-Dict_Armures[Defenseur.Armure][1]
 
 class Personnage:
     PV = 100
-    Armure = 0
+    Armure = []
     Potion = 1
-    Arme = 0
+    Arme = []
     Esquive = 0
+    Nom = ""
     
 Joueur1 = Personnage()
 Adversaire = Personnage()
 
 def main():
     print("Bienvenue dans ce simulateur de duel.")
+    Joueur1.Nom = "Joueur1"
+    Adversaire.Nom = "Adversaire"
     print("Veuillez choisir votre arme parmis la liste suivante :",\
 Cle_Dict_Armes)
     Joueur1.Arme = input()
@@ -68,10 +71,10 @@ Dict_Armures[Joueur1.Armure][0],"Protection :",Dict_Armures[Joueur1.Armure][1])
     print("Votre adversaire a choisi cette arme :",Adversaire.Arme,\
 "et cette armure :",Adversaire.Armure)
     
-    # print("Test combat : ")
-    # Blessure = combat(Joueur1,Adversaire)
-    # print(Joueur1,"a infligé",Blessure,"à",Adversaire)
-    # Adversaire.PV -= Blessure
+    print("Test combat : ")
+    Blessure = combat(Joueur1,Adversaire)
+    print(Joueur1.Nom,"a infligé",Blessure,"à",Adversaire.Nom)
+    Adversaire.PV -= Blessure
 
 if __name__ == '__main__':
     main()
