@@ -1,0 +1,1 @@
+['Eggs', 'Water', 'Milk', 'Beef Stew', 'Flour', 'Gums', 'Guns', '9Mm Luger', '10Mm Auto']

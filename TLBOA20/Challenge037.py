@@ -3,7 +3,7 @@
 
 def LOGIN_GEN(name,first_name):
     login = ""
-    name = name.lower()
+    name = name
     first_name = first_name.lower()
     login = (name.title()+first_name[0].upper())
     
