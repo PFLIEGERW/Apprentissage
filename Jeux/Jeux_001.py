@@ -30,10 +30,10 @@ Cle_Dict_Armes = list(Dict_Armes.keys())
 Blessure = 0
 
 def combat(Attaquant,Defenseur):
-    if Dict_Armes[Attaquant.Arme][0] <= Dict_Armures[Defenseur.Armure][1]:
+    if Attaquant.Arme[0] <= Defenseur.Armure[1]:
         return 0
-    elif Dict_Armes[Attaquant.Arme][0] > Dict_Armures[Defenseur.Armure][1]:
-        return Dict_Armes[Attaquant.Arme][0]-Dict_Armures[Defenseur.Armure][1]
+    elif Attaquant.Arme[0] > Defenseur.Armure[1]:
+        return Attaquant.Arme[0]-Defenseur.Armure[1]
 
 class Personnage:
     PV = 100
@@ -52,22 +52,26 @@ def main():
     Adversaire.Nom = "Adversaire"
     print("Veuillez choisir votre arme parmis la liste suivante :",\
 Cle_Dict_Armes)
-    Joueur1.Arme = input()
+    TempJoueur1Arme = input()
+    Joueur1.Arme = Dict_Armes[TempJoueur1Arme]
     
     print("Veuillez choisir votre armure parmis la liste suivante : ",\
 Cle_Dict_Armures)
-    Joueur1.Armure=input()
+    TempJoueur1Armure = input()
+    Joueur1.Armure= Dict_Armures[TempJoueur1Armure]
     
     print("Voici votre arme :",Joueur1.Arme,"Dégâts :",\
-Dict_Armes[Joueur1.Arme][0],"Nombre de cartouches :",\
-Dict_Armes[Joueur1.Arme][1])
+Joueur1.Arme[0],"Nombre de cartouches :",\
+Joueur1.Arme[1])
 
     print("Voici votre armure :",Joueur1.Armure,"Modificateur d'esquive :",\
-Dict_Armures[Joueur1.Armure][0],"Protection :",Dict_Armures[Joueur1.Armure][1])
+Joueur1.Armure[0],"Protection :",Joueur1.Armure[1])
 
     print("Votre adversaire se prépare...")
-    Adversaire.Arme = random.choice(Cle_Dict_Armes)
-    Adversaire.Armure = random.choice(Cle_Dict_Armures)
+    TempAdversaireArme = random.choice(Cle_Dict_Armes)
+    TempAdversaireArmure = random.choice(Cle_Dict_Armures)
+    Adversaire.Arme = Dict_Armes[TempAdversaireArme]
+    Adversaire.Armure = Dict_Armures[TempAdversaireArmure]
     print("Votre adversaire a choisi cette arme :",Adversaire.Arme,\
 "et cette armure :",Adversaire.Armure)
     
