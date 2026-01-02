@@ -1,0 +1,4 @@
+1 - B
+if Q1 == "B":
+2 - Le programme ne contient aucun appel de la fonction QUIZ.
+3 - initialiser la variable score à 0.
