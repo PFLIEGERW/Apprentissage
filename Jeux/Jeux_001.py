@@ -30,10 +30,10 @@ Cle_Dict_Armes = list(Dict_Armes.keys())
 Blessure = 0
 
 def combat(Attaquant,Defenseur):
-    if Attaquant.Arme[0] <= Defenseur.Armure[1]:
+    if Attaquant.Arme[1] <= Defenseur.Armure[2]:
         return 0
-    elif Attaquant.Arme[0] > Defenseur.Armure[1]:
-        return Attaquant.Arme[0]-Defenseur.Armure[1]
+    elif Attaquant.Arme[1] > Defenseur.Armure[2]:
+        return Attaquant.Arme[1]-Defenseur.Armure[2]
 
 class Personnage:
     PV = 100
@@ -53,32 +53,49 @@ def main():
     print("Veuillez choisir votre arme parmis la liste suivante :",\
 Cle_Dict_Armes)
     TempJoueur1Arme = input()
-    Joueur1.Arme = Dict_Armes[TempJoueur1Arme]
+    Joueur1.Arme.insert(0,TempJoueur1Arme)
+    Joueur1.Arme.extend(Dict_Armes[TempJoueur1Arme])
     
     print("Veuillez choisir votre armure parmis la liste suivante : ",\
 Cle_Dict_Armures)
     TempJoueur1Armure = input()
-    Joueur1.Armure= Dict_Armures[TempJoueur1Armure]
+    Joueur1.Armure.insert(0,TempJoueur1Armure)
+    Joueur1.Armure.extend(Dict_Armures[TempJoueur1Armure])
     
-    print("Voici votre arme :",Joueur1.Arme,"Dégâts :",\
-Joueur1.Arme[0],"Nombre de cartouches :",\
-Joueur1.Arme[1])
+    print("L65 : ",Joueur1.Arme)
+    print("L66 : ",Joueur1.Armure)
+    
+    print("Voici votre arme :",Joueur1.Arme[0],"Dégâts :",\
+Joueur1.Arme[1],"Nombre de cartouches :",\
+Joueur1.Arme[2])
 
-    print("Voici votre armure :",Joueur1.Armure,"Modificateur d'esquive :",\
-Joueur1.Armure[0],"Protection :",Joueur1.Armure[1])
+    print("Voici votre armure :",Joueur1.Armure[0],"Modificateur d'esquive :",\
+Joueur1.Armure[1],"Protection :",Joueur1.Armure[1])
 
     print("Votre adversaire se prépare...")
+    
+    print("L77 : ",Cle_Dict_Armes)
+    
     TempAdversaireArme = random.choice(Cle_Dict_Armes)
     TempAdversaireArmure = random.choice(Cle_Dict_Armures)
-    Adversaire.Arme = Dict_Armes[TempAdversaireArme]
-    Adversaire.Armure = Dict_Armures[TempAdversaireArmure]
+    
+    print("L82 : ",TempAdversaireArme)
+    print("L83 : ",TempAdversaireArmure)
+    
+    Adversaire.Arme.insert(0,TempAdversaireArme)
+    print("L86 : ",Adversaire.Arme)
+    Adversaire.Arme.extend(Dict_Armes[TempAdversaireArme])
+    
+    Adversaire.Armure.insert(0,TempAdversaireArmure)
+    Adversaire.Armure.extend(Dict_Armures[TempAdversaireArmure])
+    
     print("Votre adversaire a choisi cette arme :",Adversaire.Arme,\
 "et cette armure :",Adversaire.Armure)
     
-    print("Test combat : ")
-    Blessure = combat(Joueur1,Adversaire)
-    print(Joueur1.Nom,"a infligé",Blessure,"à",Adversaire.Nom)
-    Adversaire.PV -= Blessure
+    # print("Test combat : ")
+    # Blessure = combat(Joueur1,Adversaire)
+    # print(Joueur1.Nom,"a infligé",Blessure,"à",Adversaire.Nom)
+    # Adversaire.PV -= Blessure
 
 if __name__ == '__main__':
     main()
