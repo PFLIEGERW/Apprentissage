@@ -1,0 +1,7 @@
+1 - 30
+2 - List
+3 - 2
+4 - 3
+5 - 4 et 20
+6 - Il s'agit d'une division entière. Elle arrondit le résultat à l'entier inférieur ou égal au résultat réel de la division.
+7 - Un intégral
