@@ -6,7 +6,7 @@ import random
 #Perso = PV, Armure, Arme, Potion de Soin, Terrain, Visibilité
 #Adversaire = PV, Armure, Armes, Potion de Soin, Terrain, Visibilité
 #Terrain = Nom, Esquive, Visibilité
-#Armures = Nom, Esquive, Armures
+#Armures = Nom, Esquive, Armure
 #Armes = Nom, Dégâts, Cartouches
 
 Dict_Terrain = {}
@@ -27,7 +27,6 @@ Dict_Armes["M16"] = [10,30]
 Dict_Armes["M9"] = [7,12]
 Cle_Dict_Armes = list(Dict_Armes.keys())
 # Dict_Armes["Pied de biche"] = [8,-1]
-Blessure = 0
 
 def combat(Attaquant,Defenseur):
     if Attaquant.Arme[1] <= Defenseur.Armure[2]:
@@ -36,66 +35,56 @@ def combat(Attaquant,Defenseur):
         return Attaquant.Arme[1]-Defenseur.Armure[2]
 
 class Personnage:
-    PV = 100
-    Armure = []
-    Potion = 1
-    Arme = []
-    Esquive = 0
-    Nom = ""
-    
-Joueur1 = Personnage()
-Adversaire = Personnage()
+    def __init__(self,Nom):
+        self.Nom = Nom
+        self.PV = 100
+        self.Armure = []
+        self.Potion = 1
+        self.Arme = []
+        self.Esquive = 0
 
 def main():
     print("Bienvenue dans ce simulateur de duel.")
-    Joueur1.Nom = "Joueur1"
-    Adversaire.Nom = "Adversaire"
+    
+    Joueur1 = Personnage("Joueur1")
+    
     print("Veuillez choisir votre arme parmis la liste suivante :",\
 Cle_Dict_Armes)
     TempJoueur1Arme = input()
+    Joueur1.Arme = Dict_Armes[TempJoueur1Arme]
     Joueur1.Arme.insert(0,TempJoueur1Arme)
-    Joueur1.Arme.extend(Dict_Armes[TempJoueur1Arme])
     
     print("Veuillez choisir votre armure parmis la liste suivante : ",\
 Cle_Dict_Armures)
     TempJoueur1Armure = input()
+    Joueur1.Armure = Dict_Armures[TempJoueur1Armure]
     Joueur1.Armure.insert(0,TempJoueur1Armure)
-    Joueur1.Armure.extend(Dict_Armures[TempJoueur1Armure])
-    
-    print("L65 : ",Joueur1.Arme)
-    print("L66 : ",Joueur1.Armure)
     
     print("Voici votre arme :",Joueur1.Arme[0],"Dégâts :",\
 Joueur1.Arme[1],"Nombre de cartouches :",\
 Joueur1.Arme[2])
 
     print("Voici votre armure :",Joueur1.Armure[0],"Modificateur d'esquive :",\
-Joueur1.Armure[1],"Protection :",Joueur1.Armure[1])
+Joueur1.Armure[1],"Protection :",Joueur1.Armure[2])
 
     print("Votre adversaire se prépare...")
-    
-    print("L77 : ",Cle_Dict_Armes)
-    
+    Adversaire = Personnage("Adversaire")
     TempAdversaireArme = random.choice(Cle_Dict_Armes)
     TempAdversaireArmure = random.choice(Cle_Dict_Armures)
     
-    print("L82 : ",TempAdversaireArme)
-    print("L83 : ",TempAdversaireArmure)
-    
+    Adversaire.Arme = Dict_Armes[TempAdversaireArme]
     Adversaire.Arme.insert(0,TempAdversaireArme)
-    print("L86 : ",Adversaire.Arme)
-    Adversaire.Arme.extend(Dict_Armes[TempAdversaireArme])
     
+    Adversaire.Armure = Dict_Armures[TempAdversaireArmure]
     Adversaire.Armure.insert(0,TempAdversaireArmure)
-    Adversaire.Armure.extend(Dict_Armures[TempAdversaireArmure])
-    
+
     print("Votre adversaire a choisi cette arme :",Adversaire.Arme,\
 "et cette armure :",Adversaire.Armure)
     
-    # print("Test combat : ")
-    # Blessure = combat(Joueur1,Adversaire)
-    # print(Joueur1.Nom,"a infligé",Blessure,"à",Adversaire.Nom)
-    # Adversaire.PV -= Blessure
+    print("Test combat : ")
+    Blessure = combat(Joueur1,Adversaire)
+    print(Joueur1.Nom,"a infligé",Blessure,"à",Adversaire.Nom)
+    Adversaire.PV -= Blessure
 
 if __name__ == '__main__':
     main()
