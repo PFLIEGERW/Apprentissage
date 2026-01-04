@@ -1,0 +1,8 @@
+1 - discounts = [["summer10",0.1],["welcome",0.15],["refer20",0.2],\
+["loyalty25",0.25]]
+2 - Bouléen
+3 - 
+file = open("codes.txt",r)
+discounts = eval(file.read)
+file.close
+4 - Lisibilité, facilité de débuggage.
