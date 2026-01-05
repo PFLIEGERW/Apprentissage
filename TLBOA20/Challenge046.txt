@@ -1,0 +1,8 @@
+1 - 12
+2 - nums[j] = 8, nums[j+1] = 12
+Yes, it worked. temp became 9, nums[j] (9) became 1.
+nums[j+1] (1) became 9
+3 - A
+4 - temp, swapped
+5 - sorted()
+6 - shorter.
