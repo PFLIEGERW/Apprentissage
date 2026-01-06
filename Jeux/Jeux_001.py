@@ -43,11 +43,12 @@ class Personnage:
         self.Arme = []
         self.Esquive = 0
 
+Adversaire = Personnage("Adversaire")
+Joueur1 = Personnage("Joueur1")
+
 def main():
     print("Bienvenue dans ce simulateur de duel.")
-    
-    Joueur1 = Personnage("Joueur1")
-    
+
     print("Veuillez choisir votre arme parmis la liste suivante :",\
 Cle_Dict_Armes)
     TempJoueur1Arme = input()
@@ -68,7 +69,6 @@ Joueur1.Arme[2])
 Joueur1.Armure[1],"Protection :",Joueur1.Armure[2])
 
     print("Votre adversaire se prépare...")
-    Adversaire = Personnage("Adversaire")
     TempAdversaireArme = random.choice(Cle_Dict_Armes)
     TempAdversaireArmure = random.choice(Cle_Dict_Armures)
     
@@ -81,21 +81,26 @@ Joueur1.Armure[1],"Protection :",Joueur1.Armure[2])
     print("Votre adversaire a choisi cette arme :",Adversaire.Arme,\
 "et cette armure :",Adversaire.Armure)
 
-    while Joueur1.PV > 0 and Adversaire.PV > 0:
-        print("Test combat : ")
-        Blessure = combat(Joueur1,Adversaire)
-        print(Joueur1.Nom,"a infligé",Blessure,"à",Adversaire.Nom)
-        Adversaire.PV -= Blessure
-        print("Voici l'état de votre adversaire :",Adversaire.PV,"PV")
-        Blessure = combat(Adversaire,Joueur1)
-        print(Adversaire.Nom,"a infligé",Blessure,"à",Joueur1.Nom)
-        Joueur1.PV -= Blessure
-        print("Voici votre état :",Joueur1.PV,"PV")
-    
-    if Joueur1.PV == 0:
-        print("Vous êtes mort.e !")
-    else:
-        print("Votre adversaire est mort !")
-        
+    while Joueur1.PV > 0 or Adversaire.PV > 0:
+        if Joueur1.PV <= 0:
+            print("Vous êtes mort.e !")
+            break
+        elif Adversaire.PV <= 0:
+            print("Votre adversaire est mort !")
+            break
+        else:
+            while Joueur1.PV > 0 and Adversaire.PV > 0:
+                print("Test combat : ")
+                Blessure = combat(Joueur1,Adversaire)
+                print(Joueur1.Nom,"a infligé",Blessure,"dégâts à",\
+Adversaire.Nom)
+                Adversaire.PV -= Blessure
+                print("Voici l'état de votre adversaire :",Adversaire.PV,"PV")
+                Blessure = combat(Adversaire,Joueur1)
+                print(Adversaire.Nom,"a infligé",Blessure,"dégâts à",\
+Joueur1.Nom)
+                Joueur1.PV -= Blessure
+                print("Voici votre état :",Joueur1.PV,"PV")
+
 if __name__ == '__main__':
     main()
