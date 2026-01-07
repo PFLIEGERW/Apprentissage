@@ -28,7 +28,14 @@ Dict_Armes["M9"] = [7,12]
 Cle_Dict_Armes = list(Dict_Armes.keys())
 # Dict_Armes["Pied de biche"] = [8,-1]
 
-def combat(Attaquant,Defenseur):
+def Touche(Attaquant,Defenseur):
+    jet = random.randint(1,100)
+    if jet <= Attaquant.Competence-Defenseur.Esquive:
+        return 1
+    else:
+        return 0
+
+def Degats(Attaquant,Defenseur):
     if Attaquant.Arme[1] <= Defenseur.Armure[2]:
         return 0
     elif Attaquant.Arme[1] > Defenseur.Armure[2]:
@@ -42,6 +49,7 @@ class Personnage:
         self.Potion = 1
         self.Arme = []
         self.Esquive = 0
+        self.Competence = 65
 
 Adversaire = Personnage("Adversaire")
 Joueur1 = Personnage("Joueur1")
@@ -60,6 +68,7 @@ Cle_Dict_Armures)
     TempJoueur1Armure = input()
     Joueur1.Armure = Dict_Armures[TempJoueur1Armure].copy()
     Joueur1.Armure.insert(0,TempJoueur1Armure)
+    Joueur1.Esquive += Joueur1.Armure[1]
     
     print("Voici votre arme :",Joueur1.Arme[0],"Dégâts :",\
 Joueur1.Arme[1],"Nombre de cartouches :",\
@@ -77,6 +86,7 @@ Joueur1.Armure[1],"Protection :",Joueur1.Armure[2])
     
     Adversaire.Armure = Dict_Armures[TempAdversaireArmure].copy()
     Adversaire.Armure.insert(0,TempAdversaireArmure)
+    Adversaire.Esquive += Adversaire.Armure[1]
 
     print("Votre adversaire a choisi cette arme :",Adversaire.Arme,\
 "et cette armure :",Adversaire.Armure)
@@ -91,16 +101,26 @@ Joueur1.Armure[1],"Protection :",Joueur1.Armure[2])
         else:
             while Joueur1.PV > 0 and Adversaire.PV > 0:
                 print("Test combat : ")
-                Blessure = combat(Joueur1,Adversaire)
-                print(Joueur1.Nom,"a infligé",Blessure,"dégâts à",\
-Adversaire.Nom)
-                Adversaire.PV -= Blessure
-                print("Voici l'état de votre adversaire :",Adversaire.PV,"PV")
-                Blessure = combat(Adversaire,Joueur1)
-                print(Adversaire.Nom,"a infligé",Blessure,"dégâts à",\
+                Attaque1 = Touche(Joueur1,Adversaire)
+                if Attaque1 == 1:
+                    Blessure = Degats(Joueur1,Adversaire)
+                    print(Joueur1.Nom,"a infligé",Blessure,"dégâts à",\
+Adversaire.Nom) 
+                    Adversaire.PV -= Blessure
+                elif Attaque1 == 0:
+                    print("Vous avez râté votre attaque !")
+                    
+                Attaque2 = Touche(Adversaire,Joueur1)
+                if Attaque2 == 1:
+                    print("Voici l'état de votre adversaire :",\
+Adversaire.PV,"PV")
+                    Blessure = Degats(Adversaire,Joueur1)
+                    print(Adversaire.Nom,"a infligé",Blessure,"dégâts à",\
 Joueur1.Nom)
-                Joueur1.PV -= Blessure
-                print("Voici votre état :",Joueur1.PV,"PV")
+                    Joueur1.PV -= Blessure
+                    print("Voici votre état :",Joueur1.PV,"PV")
+                elif Attaque2 == 0:
+                    print("Votre adversaire a râté son attaque !")
 
 if __name__ == '__main__':
     main()
