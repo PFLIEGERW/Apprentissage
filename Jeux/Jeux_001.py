@@ -50,6 +50,7 @@ class Personnage:
         self.Arme = []
         self.Esquive = 0
         self.Competence = 65
+        self.Emplacement = []
 
 Adversaire = Personnage("Adversaire")
 Joueur1 = Personnage("Joueur1")
@@ -70,12 +71,19 @@ Cle_Dict_Armures)
     Joueur1.Armure.insert(0,TempJoueur1Armure)
     Joueur1.Esquive += Joueur1.Armure[1]
     
+    Joueur1.Emplacement.insert(0,"Plaine")
+    Joueur1.Emplacement.extend(Dict_Terrain["Plaine"].copy())
+    Joueur1.Esquive += Joueur1.Emplacement[1]
+    
     print("Voici votre arme :",Joueur1.Arme[0],"Dégâts :",\
 Joueur1.Arme[1],"Nombre de cartouches :",\
 Joueur1.Arme[2])
 
     print("Voici votre armure :",Joueur1.Armure[0],"Modificateur d'esquive :",\
 Joueur1.Armure[1],"Protection :",Joueur1.Armure[2])
+
+    print("Voici votre emplacement :",Joueur1.Emplacement[0],"Esquive :",\
+Joueur1.Emplacement[1],"Visibilité :",Joueur1.Emplacement[2])
 
     print("Votre adversaire se prépare...")
     TempAdversaireArme = random.choice(Cle_Dict_Armes)
@@ -87,9 +95,14 @@ Joueur1.Armure[1],"Protection :",Joueur1.Armure[2])
     Adversaire.Armure = Dict_Armures[TempAdversaireArmure].copy()
     Adversaire.Armure.insert(0,TempAdversaireArmure)
     Adversaire.Esquive += Adversaire.Armure[1]
+    
+    Adversaire.Emplacement.insert(0,"Plaine")
+    Adversaire.Emplacement.extend(Dict_Terrain["Plaine"].copy())
 
     print("Votre adversaire a choisi cette arme :",Adversaire.Arme,\
-"et cette armure :",Adversaire.Armure)
+"et cette armure :",Adversaire.Armure,"Il se situe ici :",\
+Adversaire.Emplacement[0],"Esquive :",Adversaire.Emplacement[1],"Visibilité :",\
+Adversaire.Emplacement[2])
 
     while Joueur1.PV > 0 or Adversaire.PV > 0:
         if Joueur1.PV <= 0:
