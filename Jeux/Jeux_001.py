@@ -45,12 +45,12 @@ class Personnage:
     def __init__(self,Nom_in):
         self.Nom = Nom_in
         self.PV = 100
-        self.Armure = []
+        self.Armure = ["",0,0]
         self.Potion = 1
-        self.Arme = []
-        self.Esquive = 0
+        self.Arme = ["",0,0]
         self.Competence = 65
-        self.Emplacement = []
+        self.Emplacement = ["",0,0]
+        self.Esquive = self.Armure[1]+self.Emplacement[1]
 
 Adversaire = Personnage("Adversaire")
 Joueur1 = Personnage("Joueur1")
@@ -69,11 +69,9 @@ Cle_Dict_Armures)
     TempJoueur1Armure = input()
     Joueur1.Armure = Dict_Armures[TempJoueur1Armure].copy()
     Joueur1.Armure.insert(0,TempJoueur1Armure)
-    Joueur1.Esquive += Joueur1.Armure[1]
-    
+
+    Joueur1.Emplacement = (Dict_Terrain["Plaine"].copy())
     Joueur1.Emplacement.insert(0,"Plaine")
-    Joueur1.Emplacement.extend(Dict_Terrain["Plaine"].copy())
-    Joueur1.Esquive += Joueur1.Emplacement[1]
     
     print("Voici votre arme :",Joueur1.Arme[0],"Dégâts :",\
 Joueur1.Arme[1],"Nombre de cartouches :",\
@@ -94,7 +92,6 @@ Joueur1.Emplacement[1],"Visibilité :",Joueur1.Emplacement[2])
     
     Adversaire.Armure = Dict_Armures[TempAdversaireArmure].copy()
     Adversaire.Armure.insert(0,TempAdversaireArmure)
-    Adversaire.Esquive += Adversaire.Armure[1]
     
     Adversaire.Emplacement.insert(0,"Plaine")
     Adversaire.Emplacement.extend(Dict_Terrain["Plaine"].copy())
@@ -134,6 +131,14 @@ Joueur1.Nom)
                     print("Voici votre état :",Joueur1.PV,"PV")
                 elif Attaque2 == 0:
                     print("Votre adversaire a râté son attaque !")
+                    
+                if Adversaire.Emplacement[0] != "Petit rocher":
+                    print("Votre adversaire se déplace !")
+                    Advmove = random.choice(Cle_Dict_Terrain)
+                    Adversaire.Emplacement = Dict_Terrain[Advmove].copy()
+                    Adversaire.Emplacement.insert(0,Advmove)
+                    print("Votre adversaire est maintenant à l'emplacement \
+suivant :",Adversaire.Emplacement[0])
 
 if __name__ == '__main__':
     main()
