@@ -10,7 +10,7 @@ import random
 #Armes = Nom, Dégâts, Cartouches
 
 dict_terrain = {}
-dict_terrain["Gros rocher"] = [100,0]
+dict_terrain["Gros rocher"] = [150,0]
 dict_terrain["Plaine"] = [0,100]
 dict_terrain["Buisson"] = [25,25]
 dict_terrain["Petit rocher"] = [50,50]
@@ -23,10 +23,48 @@ dict_armures["Aucune"] = [5,0]
 cle_dict_armures = list(dict_armures.keys())
 dict_armes = {}
 dict_armes["L1A1"] = [15,20]
-dict_armes["M16"] = [10,30]
-dict_armes["M9"] = [7,12]
+dict_armes["M16"] = [8,30]
+dict_armes["M9"] = [5,12]
 cle_dict_armes = list(dict_armes.keys())
 # dict_armes["Pied de biche"] = [8,-1]
+
+
+def Soin(perso):
+    if perso.Potion > 0:
+        perso.PV += 10
+        print(perso.Nom,"boit une potion de soin !")
+    else:
+        print(perso.Nom,"n'a plus de potion à boire !")
+
+def Observation(attaquant,defenseur):
+    vue = random.randint(1,100)
+    if attaquant.Nom == Joueur1.Nom:
+        print(attaquant.Nom,"voici votre état de santé :",attaquant.PV)
+        print(attaquant.Nom,"vous êtes situé à l'emplacement suivant :",\
+        attaquant.Emplacement[0],"Esquive :",attaquant.Emplacement[1],\
+        "Visibilité :",attaquant.Emplacement[2])
+        print(attaquant.Nom,"Il vous reste",attaquant.Arme[2],"munitions")
+        if vue <= defenseur.Visibilite:
+            print(defenseur.Nom,"est situé à l'emplacement suivant :"\
+            ,defenseur.Emplacement[0])
+            print(attaquant.Nom,"voici l'état de",defenseur.Nom,defenseur.PV)
+            print(attaquant.Nom,"Voici l'équipement de votre adversaire :",\
+            "Armure :",defenseur.Armure[0],"Arme :",defenseur.Arme[0])
+            return 1
+        else:
+            print(defenseur.Nom,"n'est pas visible actuellement.")
+            return 0
+    else:
+        if vue <= defenseur.Visibilite:
+            return 1
+        else:
+            return 0
+
+
+def Deplacement(perso):
+    emplacement_temp = random.choice(cle_dict_terrain)
+    perso.Emplacement = dict_terrain[emplacement_temp].copy()
+    perso.Emplacement.insert(0,emplacement_temp)
 
 
 def Equipement(perso):
@@ -53,6 +91,7 @@ cle_dict_armures)
         Adversaire.Armure = dict_armures[temp_adversaire_armure].copy()
         Adversaire.Armure.insert(0,temp_adversaire_armure)
 
+
 def Touche(attaquant,defenseur):
     jet = random.randint(1,100)
     if jet <= attaquant.Competence-defenseur.Esquive:
@@ -71,13 +110,14 @@ def Degats(attaquant,defenseur):
 class Personnage:
     def __init__(self,nom_in):
         self.Nom = nom_in
-        self.PV = 100
+        self.PV = 20
         self.Armure = ["",0,0]
         self.Potion = 1
         self.Arme = ["",0,0]
         self.Competence = 65
-        self.Emplacement = ["",0,0]
+        self.Emplacement = ["Plaine",0,100]
         self.Esquive = self.Armure[1]+self.Emplacement[1]
+        self.Visibilite = self.Emplacement[2]
 
 
 Adversaire = Personnage("Adversaire")
@@ -87,9 +127,6 @@ Joueur1 = Personnage("Joueur1")
 def main():
     print("Bienvenue dans ce simulateur de duel.")
     Equipement(Joueur1.Nom)
-
-    Joueur1.Emplacement = (dict_terrain["Plaine"].copy())
-    Joueur1.Emplacement.insert(0,"Plaine")
     
     print("Voici votre arme :",Joueur1.Arme[0],"Dégâts :",\
 Joueur1.Arme[1],"Nombre de cartouches :",\
@@ -103,53 +140,126 @@ Joueur1.Emplacement[1],"Visibilité :",Joueur1.Emplacement[2])
 
     print("Votre adversaire se prépare...")
     Equipement(Adversaire.Nom)
-    
-    Adversaire.Emplacement.insert(0,"Plaine")
-    Adversaire.Emplacement.extend(dict_terrain["Plaine"].copy())
+    combat = 1
+    while combat == 1:
+        localisation_adversaire = 0
+        localisation_joueur = 0
+        while Joueur1.PV > 0 and Adversaire.PV > 0:
+            actions_joueur = 2
+            while actions_joueur > 0 and Joueur1.PV > 0:
+                print("Quelle action voulez-vous effectuer ?")
+                print("1 - Déplacement. 2 - Observation.\
+3 - Potion de soin. 4 - Attaque")
+                choix = int(input())
+                match choix:
+                    case 1:
+                        print("Vous vous déplacez.")
+                        Deplacement(Joueur1)
+                        localisation_joueur = 0
+                        actions_joueur -= 1
+                        print("Actions restantes :",actions_joueur)
+                    case 2:
+                        obs = Observation(Joueur1,Adversaire)
+                        actions_joueur -= 1
+                        print("Actions restantes :",actions_joueur)
+                        if obs == 1 and actions_joueur > 0:
+                            localisation_adversaire = 1
+                            print("Vous pouvez attaquer.")
+                            print("Voulez-vous attaquer ? (oui/non)")
+                            choix_attaque = input()
+                            if choix_attaque.lower() == "oui":
+                                attaque1 = Touche(Joueur1,Adversaire)
+                                if attaque1 == 1:
+                                    Blessure = Degats(Joueur1,Adversaire)
+                                    print(Joueur1.Nom,"a infligé",Blessure\
+                                    ,"dégâts à",Adversaire.Nom)
+                                    Adversaire.PV -= Blessure
+                                    actions_joueur -= 1
+                                    print("Action restante :",\
+                                    actions_joueur)
+                                elif attaque1 == 0:
+                                    print("Vous avez râté votre attaque !")
+                                    actions_joueur -= 1
+                                    print("Actions restantes :",\
+                                    actions_joueur)
+                            else:
+                                print("Vous n'attaquez pas.")
+                        else:
+                            print("Vous ne pouvez pas attaquer\
+pour l'instant.")
+                    case 3:
+                        print("Vous buvez une potion de soin.")
+                        Soin(Joueur1)
+                    case 4:
+                        if localisation_adversaire == 1:
+                            print("Vous pouvez attaquer.")
+                            choix_attaque = input()
+                            attaque1 = Touche(Joueur1,Adversaire)
+                            if attaque1 == 1:
+                                Blessure = Degats(Joueur1,Adversaire)
+                                print(Joueur1.Nom,"a infligé",Blessure\
+                                ,"dégâts à",Adversaire.Nom)
+                                Adversaire.PV -= Blessure
+                                actions_joueur -= 1
+                                print("Action restante :",\
+                                actions_joueur)
+                            elif attaque1 == 0:
+                                print("Vous avez râté votre attaque !")
+                                actions_joueur -= 1
+                                print("Actions restantes :",\
+                                actions_joueur)
+                        else:
+                            print("Vous n'avez pas encore localisé \
+votre adversaire.")
+            
+            actions_adversaire = 2
+            while actions_adversaire > 0 and Adversaire.PV > 0:
 
-    print("Votre adversaire a choisi cette arme :",Adversaire.Arme[0],\
-"et cette armure :",Adversaire.Armure[0],"Il se situe ici :",\
-Adversaire.Emplacement[0],"Esquive :",Adversaire.Emplacement[1],"Visibilité :",\
-Adversaire.Emplacement[2])
-
-    while Joueur1.PV > 0 or Adversaire.PV > 0:
-        if Joueur1.PV <= 0:
-            print("Vous êtes mort.e !")
-            break
-        elif Adversaire.PV <= 0:
-            print("Votre adversaire est mort !")
-            break
-        else:
-            while Joueur1.PV > 0 and Adversaire.PV > 0:
-                print("Test combat : ")
-                attaque1 = Touche(Joueur1,Adversaire)
-                if attaque1 == 1:
-                    Blessure = Degats(Joueur1,Adversaire)
-                    print(Joueur1.Nom,"a infligé",Blessure,"dégâts à",\
-Adversaire.Nom) 
-                    Adversaire.PV -= Blessure
-                elif attaque1 == 0:
-                    print("Vous avez râté votre attaque !")
-                    
-                attaque2 = Touche(Adversaire,Joueur1)
-                if attaque2 == 1:
-                    print("Voici l'état de votre adversaire :",\
-Adversaire.PV,"PV")
-                    Blessure = Degats(Adversaire,Joueur1)
-                    print(Adversaire.Nom,"a infligé",Blessure,"dégâts à",\
-Joueur1.Nom)
-                    Joueur1.PV -= Blessure
-                    print("Voici votre état :",Joueur1.PV,"PV")
-                elif attaque2 == 0:
-                    print("Votre adversaire a râté son attaque !")
-                    
                 if Adversaire.Emplacement[0] != "Petit rocher":
                     print("Votre adversaire se déplace !")
-                    advmove = random.choice(cle_dict_terrain)
-                    Adversaire.Emplacement = dict_terrain[advmove].copy()
-                    Adversaire.Emplacement.insert(0,advmove)
-                    print("Votre adversaire est maintenant à l'emplacement \
-suivant :",Adversaire.Emplacement[0])
+                    Deplacement(Adversaire)
+                    localisation_adversaire = 0
+                    actions_adversaire -= 1
+                elif Adversaire.PV <= 10:
+                    print("Votre adversaire cherche une potion !")
+                    Soin(Adversaire)
+                    actions_adversaire -= 1
+                    Adversaire.Potion -= 1
+                elif localisation_joueur == 1:
+                    attaque2 = Touche(Adversaire,Joueur1)
+                    if attaque2 == 1:
+                        Blessure = Degats(Adversaire,Joueur1)
+                        print(Adversaire.Nom,"a infligé",Blessure,\
+                        "dégâts à",Joueur1.Nom)
+                        Joueur1.PV -= Blessure
+                        actions_adversaire -= 1
+                    elif attaque2 == 0:
+                        print("Votre adversaire a râté son attaque !")
+                        actions_adversaire -= 1
+                else:
+                    print("Votre adversaire observe !")
+                    adv_obs = Observation(Adversaire,Joueur1)
+                    actions_adversaire -= 1
+                    if adv_obs == 1:
+                        localisation_joueur = 1
+                    if adv_obs == 1 and localisation_joueur == 1\
+and actions_adversaire > 0:
+                        attaque2 = Touche(Adversaire,Joueur1)
+                        if attaque2 == 1:
+                            Blessure = Degats(Adversaire,Joueur1)
+                            print(Adversaire.Nom,"a infligé",Blessure,\
+                            "dégâts à",Joueur1.Nom)
+                            Joueur1.PV -= Blessure
+                            actions_adversaire -= 1
+                        elif attaque2 == 0:
+                            print("Votre adversaire a râté son attaque !")
+                            actions_adversaire -= 1
+        if Joueur1.PV <= 0:
+            print("Vous êtes mort !")
+            combat = 0
+        else:
+            print("Votre adversaire est mort !")
+            combat = 0
 
 if __name__ == '__main__':
     main()
