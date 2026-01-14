@@ -4,9 +4,9 @@
 import random
 
 #Perso = PV, Armure, Arme, Cartouches restantes,
-    #Potion de Soin, Terrain, Visibilité
+#Potion de Soin, Terrain, Visibilité
 #Adversaire = PV, Armure, Arme, Cartouches restantes,
-    #Potion de Soin, Terrain, Visibilité
+#Potion de Soin, Terrain, Visibilité
 #Terrain = Nom, Esquive, Visibilité
 #Armures = Nom, Esquive, Armure
 #Armes = Nom, Dégâts, Cartouches, mode de tir
@@ -113,29 +113,34 @@ cle_dict_armures)
         
         Adversaire.Arme = dict_armes[temp_adversaire_arme].copy()
         Adversaire.Arme.insert(0,temp_adversaire_arme)
+        Adversaire.Cartouches_restantes = Adversaire.Arme[2]
         
         Adversaire.Armure = dict_armures[temp_adversaire_armure].copy()
         Adversaire.Armure.insert(0,temp_adversaire_armure)
 
 
 def Attaque(attaquant,defenseur):
-    jet = random.randint(1,100)
-    
-    if jet <= attaquant.Competence-defenseur.Esquive:
-        attaquant.Cartouches_restantes -= attaquant.Arme[3]
-        
-        if attaquant.Arme[1] <= defenseur.Armure[2]:
-            blessure = 0
-        elif attaquant.Arme[1] > defenseur.Armure[2]:
-            blessure = attaquant.Arme[1]-defenseur.Armure[2]
+    for tir in range (attaquant.Arme[3]):
+        if attaquant.Cartouches_restantes > 0:
+            jet = random.randint(1,100)+(tir*5)
+            if jet <= attaquant.Competence-defenseur.Esquive:
+                attaquant.Cartouches_restantes -= 1
+                
+                if attaquant.Arme[1] <= defenseur.Armure[2]:
+                    blessure = 0
+                elif attaquant.Arme[1] > defenseur.Armure[2]:
+                    blessure = attaquant.Arme[1]-defenseur.Armure[2]
 
-        print(attaquant.Nom,"a infligé",blessure,"dégâts à",defenseur.Nom)
-        defenseur.PV -= blessure
+                print(attaquant.Nom,"a infligé",blessure,"dégâts à",\
+defenseur.Nom)
+                defenseur.PV -= blessure
 
-    else:
-        attaquant.Cartouches_restantes -= attaquant.Arme[3]
-        print(attaquant.Nom,"a râté son attaque !")
-    
+            else:
+                attaquant.Cartouches_restantes -= 1
+                print(attaquant.Nom,"a râté son attaque !")
+        else:
+            print("Il ne reste pas de munitions à",attaquant.Nom,"!")
+            break
 
 
 def main():
@@ -143,7 +148,8 @@ def main():
     Equipement(Joueur1.Nom)
     
     print("Voici votre arme :",Joueur1.Arme[0],"Dégâts :",\
-Joueur1.Arme[1],"Nombre de cartouches :",Joueur1.Arme[2])
+Joueur1.Arme[1],"Nombre de cartouches :",Joueur1.Arme[2],"mode de tir :",\
+Joueur1.Arme[3])
 
     print("Voici votre armure :",Joueur1.Armure[0],"Modificateur d'esquive :",\
 Joueur1.Armure[1],"Protection :",Joueur1.Armure[2])
@@ -160,9 +166,10 @@ Joueur1.Emplacement[1],"Visibilité :",Joueur1.Emplacement[2])
         while Joueur1.PV > 0 and Adversaire.PV > 0:
             Joueur1.Actions = 2
             while Joueur1.Actions > 0 and Joueur1.PV > 0:
+                print("*" * 5)
                 print("Quelle action voulez-vous effectuer ?")
-                print("1 - Déplacement. 2 - Observation.\
-3 - Potion de soin. 4 - Attaque")
+                print("1 - Déplacement. 2 - Observation. 3 - Potion de soin. \
+4 - Attaque")
                 choix = int(input())
                 match choix:
                     case 1:
@@ -204,7 +211,7 @@ votre adversaire.")
             
             Adversaire.Actions = 2
             while Adversaire.Actions > 0 and Adversaire.PV > 0:
-
+                print("*" * 5)
                 if Adversaire.Emplacement[0] != "Petit rocher":
                     print("Votre adversaire se déplace !")
                     Deplacement(Adversaire)
