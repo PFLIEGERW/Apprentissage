@@ -11,12 +11,7 @@ import random
 #Armures = Nom, Esquive, Armure
 #Armes = Nom, Dégâts, Cartouches, mode de tir
 
-dict_terrain = {}
-dict_terrain["Gros rocher"] = [150,0]
-dict_terrain["Plaine"] = [0,100]
-dict_terrain["Buisson"] = [25,25]
-dict_terrain["Petit rocher"] = [50,50]
-cle_dict_terrain = list(dict_terrain.keys())
+
 dict_armures = {}
 dict_armures["Lourde"] = [-25,10]
 dict_armures["Moyenne"] = [-10,6]
@@ -29,26 +24,25 @@ dict_armes["M16"] = [8,30,3]
 dict_armes["M9"] = [5,12,1]
 # dict_armes["Pied de biche"] = [8,-1]
 cle_dict_armes = list(dict_armes.keys())
-# 0 = néant, 1 = buisson, 2 = petit rocher, 3 = gros rocher, 4 = plaine
-# dict_terrain = {}
-# dict_terrain[0] = ["Néant",0,0]
-# dict_terrain[1] = ["Buisson",25,25]
-# dict_terrain[2] = ["Petit rocher",50,50]
-# dict_terrain[3] = ["Gros rocher",150,0]
-# dict_terrain[4] = ["Plaine",0,100]
+dict_terrain = {}
+dict_terrain[0] = ["Néant",0,0]
+dict_terrain[1] = ["Buisson",25,25]
+dict_terrain[2] = ["Petit rocher",50,50]
+dict_terrain[3] = ["Gros rocher",150,0]
+dict_terrain[4] = ["Plaine",0,100]
+cle_dict_terrain = list(dict_terrain.keys())
 
-# cle_dict_terrain = list(dict_terrain.keys())
-# dict_coordonnees = {[0,0,0,0,0,0],
-                    # [0,4,4,3,4,0],
-                    # [0,4,4,2,1,0],
-                    # [0,1,3,2,4,0],
-                    # [0,3,2,4,4,0],
-                    # [0,0,0,0,0,0]}
+list_coordonnees = [[0,0,0,0,0,0],
+                    [0,4,4,3,4,0],
+                    [0,4,4,2,1,0],
+                    [0,1,3,2,4,0],
+                    [0,3,2,4,4,0],
+                    [0,0,0,0,0,0]]
 
 
 
 class Personnage:
-    def __init__(self,nom_in):
+    def __init__(self,nom_in,posY_in,posX_in):
         self.Nom = nom_in
         self.PV = 20
         self.Armure = ["",0,0]
@@ -56,22 +50,35 @@ class Personnage:
         self.Arme = ["",0,0,0]
         self.Cartouches_restantes = 0
         self.Competence = 65
-        self.Emplacement = ["Plaine",0,100]
         self.Esquive = 0
         self.Actions = 0
-#        self.PositionY = dict_coordonnees[Y] // doit contenir la coordonnée Y.
-#        self.PositionX = dict_coordonnees[][X] // doit contenir la coordonnée X 
+        self.PosY = posY_in # doit contenir la coordonnée Y.
+        self.PosX = posX_in # doit contenir la coordonnée X.
+        self.Emplacement = dict_terrain[list_coordonnees[self.PosY][self.PosX]]\
+.copy()
 
 
-Adversaire = Personnage("Adversaire")
-Joueur1 = Personnage("Joueur1")
+Adversaire = Personnage("Adversaire",1,1)
+Joueur1 = Personnage("Joueur1",4,4)
 
 
-# def Position(perso): //Cette fonction devra indiquer l'emplacement actuel.
-#                      //Elle devra également lire les emplacements situés
-#                      //autour (gauche, droite, haut, bas).
-    # print(perso.Nom,"est à l'emplacement suivant :",perso.Emplacement)
-    # print(perso.Nom,"voit à sa gauche :",perso.PositionX-1)
+def Position(perso):
+     #Cette fonction indique l'emplacement actuel du personnage.
+     #Elle lit également les emplacements situés
+     #autour (NSEO).
+    if perso.Nom == Joueur1.Nom:
+        print(perso.Nom,"vous êtes situé à l'emplacement suivant :",\
+        perso.Emplacement[0],"Esquive :",perso.Emplacement[1],\
+        "Visibilité :",perso.Emplacement[2])
+        print(perso.Nom,"voit ceci :")
+        print("-",dict_terrain[list_coordonnees[perso.PosY][perso.PosX-1]][0],\
+    "vers l'ouest.")
+        print("-",dict_terrain[list_coordonnees[perso.PosY][perso.PosX+1]][0],\
+    "vers l'est.")
+        print("-",dict_terrain[list_coordonnees[perso.PosY+1][perso.PosX]][0],\
+    "vers le sud")
+        print("-",dict_terrain[list_coordonnees[perso.PosY-1][perso.PosX]][0],\
+    "vers le nord")
 
 
 def Soin(perso):
@@ -87,9 +94,7 @@ def Observation(attaquant,defenseur):
     
     if attaquant.Nom == Joueur1.Nom:
         print(attaquant.Nom,"voici votre état de santé :",attaquant.PV)
-        print(attaquant.Nom,"vous êtes situé à l'emplacement suivant :",\
-        attaquant.Emplacement[0],"Esquive :",attaquant.Emplacement[1],\
-        "Visibilité :",attaquant.Emplacement[2])
+        Position(attaquant)
         print(attaquant.Nom,"Il vous reste",attaquant.Cartouches_restantes,\
         "munitions")
         
@@ -111,10 +116,13 @@ def Observation(attaquant,defenseur):
             return 0
 
 
-def Deplacement(perso):
-    emplacement_temp = random.choice(cle_dict_terrain)
-    perso.Emplacement = dict_terrain[emplacement_temp].copy()
-    perso.Emplacement.insert(0,emplacement_temp)
+#Deplacement à réécrire complètement.
+def Deplacement(perso,posX_in,posY_in):
+    if perso.Emplacement[0] == "Néant":
+        print("Vous ne pouvez pas aller par là.")
+        
+    perso.PosX += posX_in
+    perso.PosY += posY_in
 
 
 def Equipement(perso):
