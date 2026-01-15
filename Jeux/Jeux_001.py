@@ -27,8 +27,24 @@ dict_armes = {}
 dict_armes["L1A1"] = [15,20,1]
 dict_armes["M16"] = [8,30,3]
 dict_armes["M9"] = [5,12,1]
-cle_dict_armes = list(dict_armes.keys())
 # dict_armes["Pied de biche"] = [8,-1]
+cle_dict_armes = list(dict_armes.keys())
+# 0 = néant, 1 = buisson, 2 = petit rocher, 3 = gros rocher, 4 = plaine
+# dict_terrain = {}
+# dict_terrain[0] = ["Néant",0,0]
+# dict_terrain[1] = ["Buisson",25,25]
+# dict_terrain[2] = ["Petit rocher",50,50]
+# dict_terrain[3] = ["Gros rocher",150,0]
+# dict_terrain[4] = ["Plaine",0,100]
+
+# cle_dict_terrain = list(dict_terrain.keys())
+# dict_coordonnees = {[0,0,0,0,0,0],
+                    # [0,4,4,3,4,0],
+                    # [0,4,4,2,1,0],
+                    # [0,1,3,2,4,0],
+                    # [0,3,2,4,4,0],
+                    # [0,0,0,0,0,0]}
+
 
 
 class Personnage:
@@ -43,10 +59,19 @@ class Personnage:
         self.Emplacement = ["Plaine",0,100]
         self.Esquive = 0
         self.Actions = 0
+#        self.PositionY = dict_coordonnees[Y] // doit contenir la coordonnée Y.
+#        self.PositionX = dict_coordonnees[][X] // doit contenir la coordonnée X 
 
 
 Adversaire = Personnage("Adversaire")
 Joueur1 = Personnage("Joueur1")
+
+
+# def Position(perso): //Cette fonction devra indiquer l'emplacement actuel.
+#                      //Elle devra également lire les emplacements situés
+#                      //autour (gauche, droite, haut, bas).
+    # print(perso.Nom,"est à l'emplacement suivant :",perso.Emplacement)
+    # print(perso.Nom,"voit à sa gauche :",perso.PositionX-1)
 
 
 def Soin(perso):
