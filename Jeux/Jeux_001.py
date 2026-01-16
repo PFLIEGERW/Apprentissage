@@ -56,6 +56,12 @@ class Personnage:
         self.PosX = posX_in # doit contenir la coordonnée X.
         self.Emplacement = dict_terrain[list_coordonnees[self.PosY][self.PosX]]\
 .copy()
+    
+    def update_Emplacement(self,up_posY_in,up_posX_in):
+        self.PosY = up_posY_in
+        self.PosX = up_posX_in
+        self.Emplacement = dict_terrain[list_coordonnees[self.PosY][self.PosX]]\
+.copy()
 
 
 Adversaire = Personnage("Adversaire",1,1)
@@ -117,12 +123,49 @@ def Observation(attaquant,defenseur):
 
 
 #Deplacement à réécrire complètement.
-def Deplacement(perso,posX_in,posY_in):
-    if perso.Emplacement[0] == "Néant":
-        print("Vous ne pouvez pas aller par là.")
-        
-    perso.PosX += posX_in
-    perso.PosY += posY_in
+def Deplacement(perso):
+        print("Vers où voulez-vous vous déplacer (N)ord, (S)ud, (E)st,\
+(O)uest ?")
+        direction = input()
+        match direction:
+            case "N":
+                print(perso.Emplacement)
+                Y = perso.PosY - 1
+                X = perso.PosX + 0
+                perso.update_Emplacement(Y,X)
+                print(perso.Emplacement)
+                
+                if perso.Emplacement == 0:
+                    print("Vous ne pouvez pas aller par là !")
+                    perso.PosX += 0
+                    perso.PosY += 1
+                    return Deplacement(perso)
+            case "S":
+                perso.PosX += 0
+                perso.PosY += 1
+                if perso.Emplacement == 0:
+                    print("Vous ne pouvez pas aller par là !")
+                    perso.PosX += 0
+                    perso.PosY += -1
+                    return Deplacement(perso)
+            case "E":
+                print(perso.Emplacement)
+                perso.PosX += 1
+                perso.PosY += 0
+                print(perso.Emplacement)
+                if perso.Emplacement == 0:
+                    print("Vous ne pouvez pas aller par là !")
+                    perso.PosX += -1
+                    perso.PosY += 0
+                    return Deplacement(perso)
+            case "O":
+                perso.PosX += -1
+                perso.PosY += 0
+                if perso.Emplacement == 0:
+                    print("Vous ne pouvez pas aller par là !")
+                    perso.PosX += 1
+                    perso.PosY += 0
+                    return Deplacement(perso)
 
 
 def Equipement(perso):
@@ -206,7 +249,6 @@ Joueur1.Emplacement[1],"Visibilité :",Joueur1.Emplacement[2])
                 choix = int(input())
                 match choix:
                     case 1:
-                        print("Vous vous déplacez.")
                         Deplacement(Joueur1)
                         Joueur1.Esquive = Joueur1.Armure[1]\
                                         +Joueur1.Emplacement[1]
