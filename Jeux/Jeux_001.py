@@ -35,8 +35,8 @@ cle_dict_terrain = list(dict_terrain.keys())
 list_coordonnees = [[0,0,0,0,0,0],
                     [0,4,4,3,4,0],
                     [0,4,4,2,1,0],
-                    [0,1,3,2,4,0],
-                    [0,3,2,4,4,0],
+                    [0,1,3,2,2,0],
+                    [0,3,2,3,4,0],
                     [0,0,0,0,0,0]]
 
 
@@ -54,12 +54,6 @@ class Personnage:
         self.Actions = 0
         self.PosY = posY_in # doit contenir la coordonnée Y.
         self.PosX = posX_in # doit contenir la coordonnée X.
-        self.Emplacement = dict_terrain[list_coordonnees[self.PosY][self.PosX]]\
-.copy()
-    
-    def update_Emplacement(self,up_posY_in,up_posX_in):
-        self.PosY = up_posY_in
-        self.PosX = up_posX_in
         self.Emplacement = dict_terrain[list_coordonnees[self.PosY][self.PosX]]\
 .copy()
 
@@ -124,18 +118,18 @@ def Observation(attaquant,defenseur):
 
 #Deplacement à réécrire complètement.
 def Deplacement(perso):
+    if perso.Nom == Joueur1.Nom:
         print("Vers où voulez-vous vous déplacer (N)ord, (S)ud, (E)st,\
 (O)uest ?")
         direction = input()
         match direction:
             case "N":
-                print(perso.Emplacement)
-                Y = perso.PosY - 1
-                X = perso.PosX + 0
-                perso.update_Emplacement(Y,X)
-                print(perso.Emplacement)
+                perso.PosY += - 1
+                perso.PosX += 0
+                perso.Emplacement = dict_terrain[list_coordonnees[perso.PosY]\
+[perso.PosX]].copy()
                 
-                if perso.Emplacement == 0:
+                if perso.Emplacement[0] == "Néant":
                     print("Vous ne pouvez pas aller par là !")
                     perso.PosX += 0
                     perso.PosY += 1
@@ -143,17 +137,19 @@ def Deplacement(perso):
             case "S":
                 perso.PosX += 0
                 perso.PosY += 1
-                if perso.Emplacement == 0:
+                perso.Emplacement = dict_terrain[list_coordonnees[perso.PosY]\
+[perso.PosX]].copy()
+                if perso.Emplacement[0] == "Néant":
                     print("Vous ne pouvez pas aller par là !")
                     perso.PosX += 0
                     perso.PosY += -1
                     return Deplacement(perso)
             case "E":
-                print(perso.Emplacement)
                 perso.PosX += 1
                 perso.PosY += 0
-                print(perso.Emplacement)
-                if perso.Emplacement == 0:
+                perso.Emplacement = dict_terrain[list_coordonnees[perso.PosY]\
+[perso.PosX]].copy()
+                if perso.Emplacement[0] == "Néant":
                     print("Vous ne pouvez pas aller par là !")
                     perso.PosX += -1
                     perso.PosY += 0
@@ -161,11 +157,24 @@ def Deplacement(perso):
             case "O":
                 perso.PosX += -1
                 perso.PosY += 0
-                if perso.Emplacement == 0:
+                perso.Emplacement = dict_terrain[list_coordonnees[perso.PosY]\
+[perso.PosX]].copy()
+                if perso.Emplacement[0] == "Néant":
                     print("Vous ne pouvez pas aller par là !")
                     perso.PosX += 1
                     perso.PosY += 0
                     return Deplacement(perso)
+    else:
+        if perso.Emplacement[0] == "Plaine" or perso.Emplacement[0]\
+== "Gros rocher" or perso.Emplacement[0] == "Buisson":
+            perso.PosY += - 1
+            perso.PosX += 0
+            perso.Emplacement = dict_terrain[list_coordonnees[perso.PosY]\
+[perso.PosX]].copy()
+            if perso.Emplacement[0] == "Néant":
+                perso.PosX += 0
+                perso.PosY += 1
+                return Deplacement(perso)
 
 
 def Equipement(perso):
