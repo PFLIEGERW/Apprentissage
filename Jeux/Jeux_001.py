@@ -118,6 +118,8 @@ def Observation(attaquant,defenseur):
 
 #Deplacement à réécrire complètement.
 def Deplacement(perso):
+    tempX = perso.PosX
+    tempY = perso.PosY
     if perso.Nom == Joueur1.Nom:
         print("Vers où voulez-vous vous déplacer (N)ord, (S)ud, (E)st,\
 (O)uest ?")
@@ -128,53 +130,65 @@ def Deplacement(perso):
                 perso.PosX += 0
                 perso.Emplacement = dict_terrain[list_coordonnees[perso.PosY]\
 [perso.PosX]].copy()
-                
-                if perso.Emplacement[0] == "Néant":
-                    print("Vous ne pouvez pas aller par là !")
-                    perso.PosX += 0
-                    perso.PosY += 1
-                    return Deplacement(perso)
+
             case "S":
                 perso.PosX += 0
                 perso.PosY += 1
                 perso.Emplacement = dict_terrain[list_coordonnees[perso.PosY]\
 [perso.PosX]].copy()
-                if perso.Emplacement[0] == "Néant":
-                    print("Vous ne pouvez pas aller par là !")
-                    perso.PosX += 0
-                    perso.PosY += -1
-                    return Deplacement(perso)
+
             case "E":
                 perso.PosX += 1
                 perso.PosY += 0
                 perso.Emplacement = dict_terrain[list_coordonnees[perso.PosY]\
 [perso.PosX]].copy()
-                if perso.Emplacement[0] == "Néant":
-                    print("Vous ne pouvez pas aller par là !")
-                    perso.PosX += -1
-                    perso.PosY += 0
-                    return Deplacement(perso)
+
             case "O":
                 perso.PosX += -1
                 perso.PosY += 0
                 perso.Emplacement = dict_terrain[list_coordonnees[perso.PosY]\
 [perso.PosX]].copy()
-                if perso.Emplacement[0] == "Néant":
-                    print("Vous ne pouvez pas aller par là !")
+
+        if perso.Emplacement[0] == "Néant":
+            print("Vous ne pouvez pas aller par là !")
+            perso.PosX = tempX
+            perso.PosY = tempY
+            return Deplacement(perso)
+
+    else:
+        if perso.Emplacement[0] != "Petit rocher":
+            
+            direction = random.randint(0,3)
+            match direction:
+                case 0: # Nord
+                    perso.PosY += - 1
+                    perso.PosX += 0
+                    perso.Emplacement = dict_terrain[list_coordonnees\
+[perso.PosY][perso.PosX]].copy()
+
+                case 1: # Est
+                    perso.PosX += 0
+                    perso.PosY += 1
+                    perso.Emplacement = dict_terrain[list_coordonnees\
+[perso.PosY][perso.PosX]].copy()
+
+                case 2: # Sud
                     perso.PosX += 1
                     perso.PosY += 0
-                    return Deplacement(perso)
-    else:
-        if perso.Emplacement[0] == "Plaine" or perso.Emplacement[0]\
-== "Gros rocher" or perso.Emplacement[0] == "Buisson":
-            perso.PosY += - 1
-            perso.PosX += 0
-            perso.Emplacement = dict_terrain[list_coordonnees[perso.PosY]\
-[perso.PosX]].copy()
+                    perso.Emplacement = dict_terrain[list_coordonnees\
+[perso.PosY][perso.PosX]].copy()
+
+                case 3: # Ouest
+                    perso.PosX += -1
+                    perso.PosY += 0
+                    perso.Emplacement = dict_terrain[list_coordonnees\
+[perso.PosY][perso.PosX]].copy()
+
             if perso.Emplacement[0] == "Néant":
-                perso.PosX += 0
-                perso.PosY += 1
+                perso.PosX = tempX
+                perso.PosY = tempY
                 return Deplacement(perso)
+
 
 
 def Equipement(perso):
@@ -267,9 +281,10 @@ Joueur1.Emplacement[1],"Visibilité :",Joueur1.Emplacement[2])
                     case 2:
                         obs = Observation(Joueur1,Adversaire)
                         Joueur1.Actions -= 1
-                        print("Actions restantes :",Joueur1.Actions)
-                        if obs == 1 and Joueur1.Actions > 0:
+                        if obs == 1:
                             localisation_adversaire = 1
+                        print("Actions restantes :",Joueur1.Actions)
+                        if localisation_adversaire == 1 and Joueur1.Actions > 0:
                             print("Vous pouvez attaquer.")
                             print("Voulez-vous attaquer ? (oui/non)")
                             choix_attaque = input()
@@ -317,8 +332,7 @@ votre adversaire.")
                     Adversaire.Actions -= 1
                     if adv_obs == 1:
                         localisation_joueur = 1
-                        if adv_obs == 1 and localisation_joueur == 1\
-and Adversaire.Actions > 0:
+                        if localisation_joueur == 1 and Adversaire.Actions > 0:
                             Attaque(Adversaire,Joueur1)    
                             Adversaire.Actions -= 1
 
