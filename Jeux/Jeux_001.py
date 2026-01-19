@@ -117,7 +117,7 @@ def Observation(attaquant,defenseur):
 
 
 #Deplacement à réécrire complètement.
-def Deplacement(perso):
+def Deplacement(perso,compteur):
     tempX = perso.PosX
     tempY = perso.PosY
     if perso.Nom == Joueur1.Nom:
@@ -157,8 +157,10 @@ def Deplacement(perso):
 
     else:
         if perso.Emplacement[0] != "Petit rocher":
-            
-            direction = random.randint(0,3)
+            if compteur % 2 == 0:
+                direction = random.randint(0,1)
+            else:
+                direction = random.randint(2,3)
             match direction:
                 case 0: # Nord
                     perso.PosY += - 1
@@ -187,7 +189,7 @@ def Deplacement(perso):
             if perso.Emplacement[0] == "Néant":
                 perso.PosX = tempX
                 perso.PosY = tempY
-                return Deplacement(perso)
+                return Deplacement(perso,compteur)
 
 
 
@@ -259,11 +261,15 @@ Joueur1.Emplacement[1],"Visibilité :",Joueur1.Emplacement[2])
     print("Votre adversaire se prépare...")
     Equipement(Adversaire.Nom)
     combat = 1
+    compteurs_tours = 0
     while combat == 1:
         localisation_adversaire = 0
         localisation_joueur = 0
         while Joueur1.PV > 0 and Adversaire.PV > 0:
             Joueur1.Actions = 2
+            compteurs_tours += 1
+            print("-" * 5)
+            print("TOUR N°",compteurs_tours)
             while Joueur1.Actions > 0 and Joueur1.PV > 0:
                 print("*" * 5)
                 print("Quelle action voulez-vous effectuer ?")
@@ -272,7 +278,7 @@ Joueur1.Emplacement[1],"Visibilité :",Joueur1.Emplacement[2])
                 choix = int(input())
                 match choix:
                     case 1:
-                        Deplacement(Joueur1)
+                        Deplacement(Joueur1,compteurs_tours)
                         Joueur1.Esquive = Joueur1.Armure[1]\
                                         +Joueur1.Emplacement[1]
                         localisation_joueur = 0
@@ -313,7 +319,7 @@ votre adversaire.")
                 print("*" * 5)
                 if Adversaire.Emplacement[0] != "Petit rocher":
                     print("Votre adversaire se déplace !")
-                    Deplacement(Adversaire)
+                    Deplacement(Adversaire,compteurs_tours)
                     Adversaire.Esquive = Adversaire.Armure[1]\
                                     +Adversaire.Emplacement[1]
                     localisation_adversaire = 0
