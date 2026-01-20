@@ -60,6 +60,22 @@ class Personnage:
 
 Adversaire = Personnage("Adversaire",1,1)
 Joueur1 = Personnage("Joueur1",4,4)
+    
+
+def Score(perso,compteur):
+    file = open("Duel_Scores.txt")
+    score_list_ori = eval(file.read())
+    file.close()
+    
+    score_dict_today = {}
+    score_dict_today[perso.Nom] = compteur
+    score_list_final = []
+    score_list_final += score_dict_today
+    
+    score_list_final.sort(reverse = True,key = lambda score: score[1])
+    
+    print(score_list_final)
+    
 
 
 def Position(perso):
@@ -260,8 +276,10 @@ Joueur1.Emplacement[1],"Visibilité :",Joueur1.Emplacement[2])
 
     print("Votre adversaire se prépare...")
     Equipement(Adversaire.Nom)
+    
     combat = 1
     compteurs_tours = 0
+    
     while combat == 1:
         localisation_adversaire = 0
         localisation_joueur = 0
@@ -347,6 +365,7 @@ votre adversaire.")
             combat = 0
         else:
             print("Votre adversaire est mort !")
+            Score(Joueur1,compteurs_tours)
             combat = 0
 
 if __name__ == '__main__':
