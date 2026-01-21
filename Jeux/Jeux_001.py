@@ -19,6 +19,7 @@ dict_armures["Légère"] = [0,2]
 dict_armures["Aucune"] = [5,0]
 cle_dict_armures = list(dict_armures.keys())
 dict_armes = {}
+dict_armes["Test"] = [50,10,2]
 dict_armes["L1A1"] = [15,20,1]
 dict_armes["M16"] = [8,30,3]
 dict_armes["M9"] = [5,12,1]
@@ -63,19 +64,18 @@ Joueur1 = Personnage("Joueur1",4,4)
     
 
 def Score(perso,compteur):
-    file = open("Duel_Scores.txt")
-    score_list_ori = eval(file.read())
-    file.close()
+    with open("Duel_Scores.txt","r+") as file:
+        list_scores = file.readlines()
     
-    score_dict_today = {}
-    score_dict_today[perso.Nom] = compteur
-    score_list_final = []
-    score_list_final += score_dict_today
+    score_tuples_present = (perso.Nom,compteur)
+    list_scores.append(str(score_tuples_present))
     
-    score_list_final.sort(reverse = True,key = lambda score: score[1])
-    
-    print(score_list_final)
-    
+    with open("Duel_Scores.txt","w") as file:
+        line = file.writelines(list_scores)
+    with open("Duel_Scores.txt","r") as file:
+        print("Meilleures scores :\n")
+        for x in file.readlines():
+            print(x)
 
 
 def Position(perso):
