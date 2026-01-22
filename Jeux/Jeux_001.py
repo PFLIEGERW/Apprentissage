@@ -19,7 +19,7 @@ dict_armures["Légère"] = [0,2]
 dict_armures["Aucune"] = [5,0]
 cle_dict_armures = list(dict_armures.keys())
 dict_armes = {}
-dict_armes["Test"] = [50,10,2]
+#dict_armes["Test"] = [50,10,2]
 dict_armes["L1A1"] = [15,20,1]
 dict_armes["M16"] = [8,30,3]
 dict_armes["M9"] = [5,12,1]
@@ -41,7 +41,6 @@ list_coordonnees = [[0,0,0,0,0,0],
                     [0,0,0,0,0,0]]
 
 
-
 class Personnage:
     def __init__(self,nom_in,posY_in,posX_in):
         self.Nom = nom_in
@@ -61,21 +60,27 @@ class Personnage:
 
 Adversaire = Personnage("Adversaire",1,1)
 Joueur1 = Personnage("Joueur1",4,4)
-    
+
 
 def Score(perso,compteur):
-    with open("Duel_Scores.txt","r+") as file:
-        list_scores = file.readlines()
+    
+    try:
+        with open("Duel_Scores.txt","r+") as file:
+            list_scores = file.read().splitlines()
+    except FileNotFoundError:
+        list_scores = []
     
     score_tuples_present = (perso.Nom,compteur)
-    list_scores.append(str(score_tuples_present))
+    list_scores.append(str(score_tuples_present)) #conversion en string
+    list_scores.sort(key = lambda i:i[1],reverse = True) #Tri ordre croissant
     
-    with open("Duel_Scores.txt","w") as file:
-        line = file.writelines(list_scores)
-    with open("Duel_Scores.txt","r") as file:
-        print("Meilleures scores :\n")
-        for x in file.readlines():
-            print(x)
+    with open("Duel_Scores.txt", "w") as file:
+        for element in list_scores:
+            if element.strip():
+                file.write(element+"\n")
+    print("Meilleures scores :")
+    for x in list_scores:
+        print(x)
 
 
 def Position(perso):
@@ -164,6 +169,10 @@ def Deplacement(perso,compteur):
                 perso.PosY += 0
                 perso.Emplacement = dict_terrain[list_coordonnees[perso.PosY]\
 [perso.PosX]].copy()
+            
+            case _:
+                print("Entrée incorrecte.")
+                return Deplacement(perso,compteur)
 
         if perso.Emplacement[0] == "Néant":
             print("Vous ne pouvez pas aller par là !")
@@ -213,15 +222,26 @@ def Equipement(perso):
     if perso == Joueur1.Nom:
         print("Veuillez choisir votre arme parmis la liste suivante :",\
 cle_dict_armes)
+        
         temp_joueur1_arme = input()
-        Joueur1.Arme = dict_armes[temp_joueur1_arme].copy()
+        try:
+            Joueur1.Arme = dict_armes[temp_joueur1_arme].copy()
+        except KeyError:
+            print("Entrée incorrecte !")
+            return Equipement(perso)
+
         Joueur1.Arme.insert(0,temp_joueur1_arme)
         Joueur1.Cartouches_restantes = Joueur1.Arme[2]
         
         print("Veuillez choisir votre armure parmis la liste suivante : ",\
 cle_dict_armures)
         temp_joueur1_armure = input()
-        Joueur1.Armure = dict_armures[temp_joueur1_armure].copy()
+        try:
+            Joueur1.Armure = dict_armures[temp_joueur1_armure].copy()
+        except KeyError:
+            print("Entrée incorrecte !")
+            return Equipement(perso)
+
         Joueur1.Armure.insert(0,temp_joueur1_armure)
     
     else:
@@ -258,6 +278,56 @@ defenseur.Nom)
         else:
             print("Il ne reste pas de munitions à",attaquant.Nom,"!")
             break
+            
+def TourHumain(localisation_adversaire,localisation_joueur):
+    print("Quelle action voulez-vous effectuer ?")
+    print("1 - Déplacement. 2 - Observation. 3 - Potion de soin. \
+4 - Attaque")
+    try:
+        choix = int(input())
+    except ValueError:
+        print("Entrée incorrecte !")
+        return TourHumain(localisation_adversaire,localisation_joueur)
+    match choix:
+        case 1:
+            Deplacement(Joueur1,compteurs_tours)
+            Joueur1.Esquive = Joueur1.Armure[1]\
+                            +Joueur1.Emplacement[1]
+            localisation_joueur = 0
+            Joueur1.Actions -= 1
+            print("Actions restantes :",Joueur1.Actions)
+        case 2:
+            obs = Observation(Joueur1,Adversaire)
+            Joueur1.Actions -= 1
+            if obs == 1:
+                localisation_adversaire = 1
+            print("Actions restantes :",Joueur1.Actions)
+            if localisation_adversaire == 1 and Joueur1.Actions > 0:
+                print("Vous pouvez attaquer.")
+                print("Voulez-vous attaquer ? (oui/non)")
+                choix_attaque = input()
+                if choix_attaque.lower() == "oui":
+                    Attaque(Joueur1,Adversaire)
+                    Joueur1.Actions -= 1
+                else:
+                    print("Vous n'attaquez pas.")
+            else:
+                print("Vous ne pouvez pas attaquer \
+pour l'instant.")
+        case 3:
+            print("Vous buvez une potion de soin.")
+            Soin(Joueur1)
+            Joueur1.Actions -= 1
+        case 4:
+            if localisation_adversaire == 1:
+                Attaque(Joueur1,Adversaire)
+                Joueur1.Actions -= 1
+            else:
+                print("Vous n'avez pas encore localisé \
+votre adversaire.")
+        case _:
+            print("Entrée incorrecte !")
+            return TourHumain()
 
 
 def main():
@@ -290,47 +360,7 @@ Joueur1.Emplacement[1],"Visibilité :",Joueur1.Emplacement[2])
             print("TOUR N°",compteurs_tours)
             while Joueur1.Actions > 0 and Joueur1.PV > 0:
                 print("*" * 5)
-                print("Quelle action voulez-vous effectuer ?")
-                print("1 - Déplacement. 2 - Observation. 3 - Potion de soin. \
-4 - Attaque")
-                choix = int(input())
-                match choix:
-                    case 1:
-                        Deplacement(Joueur1,compteurs_tours)
-                        Joueur1.Esquive = Joueur1.Armure[1]\
-                                        +Joueur1.Emplacement[1]
-                        localisation_joueur = 0
-                        Joueur1.Actions -= 1
-                        print("Actions restantes :",Joueur1.Actions)
-                    case 2:
-                        obs = Observation(Joueur1,Adversaire)
-                        Joueur1.Actions -= 1
-                        if obs == 1:
-                            localisation_adversaire = 1
-                        print("Actions restantes :",Joueur1.Actions)
-                        if localisation_adversaire == 1 and Joueur1.Actions > 0:
-                            print("Vous pouvez attaquer.")
-                            print("Voulez-vous attaquer ? (oui/non)")
-                            choix_attaque = input()
-                            if choix_attaque.lower() == "oui":
-                                Attaque(Joueur1,Adversaire)
-                                Joueur1.Actions -= 1
-                            else:
-                                print("Vous n'attaquez pas.")
-                        else:
-                            print("Vous ne pouvez pas attaquer \
-pour l'instant.")
-                    case 3:
-                        print("Vous buvez une potion de soin.")
-                        Soin(Joueur1)
-                        Joueur1.Actions -= 1
-                    case 4:
-                        if localisation_adversaire == 1:
-                            Attaque(Joueur1,Adversaire)
-                            Joueur1.Actions -= 1
-                        else:
-                            print("Vous n'avez pas encore localisé \
-votre adversaire.")
+                TourHumain(localisation_adversaire,localisation_joueur)
             
             Adversaire.Actions = 2
             while Adversaire.Actions > 0 and Adversaire.PV > 0:
