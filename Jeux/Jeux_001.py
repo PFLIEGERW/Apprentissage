@@ -13,16 +13,16 @@ import random
 
 
 dict_armures = {}
-dict_armures["Lourde"] = [-25,10]
-dict_armures["Moyenne"] = [-10,6]
-dict_armures["Légère"] = [0,2]
-dict_armures["Aucune"] = [5,0]
+dict_armures["Lourde"] = [-9,10]
+dict_armures["Moyenne"] = [-7,8]
+dict_armures["Légère"] = [0,5]
+dict_armures["Aucune"] = [10,0]
 cle_dict_armures = list(dict_armures.keys())
 dict_armes = {}
 #dict_armes["Test"] = [50,10,2]
 dict_armes["L1A1"] = [15,20,1]
-dict_armes["M16"] = [8,30,3]
-dict_armes["M9"] = [5,12,1]
+dict_armes["M16"] = [12,30,3]
+dict_armes["Rhino"] = [20,6,1]
 # dict_armes["Pied de biche"] = [8,-1]
 cle_dict_armes = list(dict_armes.keys())
 dict_terrain = {}
@@ -331,6 +331,7 @@ votre adversaire.")
 
 
 def main():
+    GenCarte()
     print("Bienvenue dans ce simulateur de duel.")
     Equipement(Joueur1.Nom)
     
