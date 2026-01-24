@@ -41,12 +41,6 @@ list_coordonnees = [[0,0,0,0,0,0],
                     [0,0,0,0,0,0]]
 
 
-def GenCarte():
-    for i in range (1,4):
-        for j in range (1,4):
-            list_coordonnees[i][j] = random.randint(1,4)
-
-
 class Personnage:
     def __init__(self,nom_in,posY_in,posX_in):
         self.Nom = nom_in
@@ -66,6 +60,12 @@ class Personnage:
 
 Adversaire = Personnage("Adversaire",1,1)
 Joueur1 = Personnage("Joueur1",4,4)
+
+
+def GenCarte():
+    for i in range (1,4):
+        for j in range (1,4):
+            list_coordonnees[i][j] = random.randint(1,4)
 
 
 def Score(perso,compteur):
