@@ -41,6 +41,12 @@ list_coordonnees = [[0,0,0,0,0,0],
                     [0,0,0,0,0,0]]
 
 
+def GenCarte():
+    for i in range (1,4):
+        for j in range (1,4):
+            list_coordonnees[i][j] = random.randint(1,4)
+
+
 class Personnage:
     def __init__(self,nom_in,posY_in,posX_in):
         self.Nom = nom_in
@@ -332,6 +338,7 @@ votre adversaire.")
 
 def main():
     GenCarte()
+    
     print("Bienvenue dans ce simulateur de duel.")
     Equipement(Joueur1.Nom)
     
